@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Booking Conversation Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #4a154b;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .conversation {
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .user-message, .assistant-message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin: 4px 0;
+        }
+        .user-message {
+            background-color: #efefef;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .assistant-message {
+            background-color: #4a154b;
+            color: white;
+            align-self: flex-start;
+        }
+        .timeline {
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 28px;
+            padding-bottom: 24px;
+            border-left: 2px solid #4a154b;
+        }
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 18px;
+            height: 18px;
+            background-color: #4a154b;
+            border-radius: 50%;
+        }
+        .timeline-content {
+            padding: 16px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .timeline-title {
+            font-weight: bold;
+            color: #4a154b;
+            margin-bottom: 8px;
+        }
+        .timeline-details {
+            color: #555;
+            font-size: 0.9em;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .badge-location {
+            background-color: #36c5f0;
+            color: white;
+        }
+        .badge-price {
+            background-color: #2eb67d;
+            color: white;
+        }
+        .badge-error {
+            background-color: #e01e5a;
+            color: white;
+        }
+        .badge-success {
+            background-color: #2eb67d;
+            color: white;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .italic {
+            font-style: italic;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 16px 0 8px 0;
+            color: #4a154b;
+        }
+        .map-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #1264a3;
+            text-decoration: none;
+        }
+        .map-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bike Taxi Booking Conversation</h1>
+        </div>
+        
+        <div class="timeline">
+            <h2 class="section-title">Booking Timeline</h2>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Initial Ride Request</div>
+                    <div class="timeline-details">
+                        User requested a bike taxi from MG Road to S Block.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Location Selection - Source</div>
+                    <div class="timeline-details">
+                        <span class="badge badge-location">Pickup</span> MG Road Metro, Gurugram selected
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Location Selection - Destination</div>
+                    <div class="timeline-details">
+                        <span class="badge badge-location">Dropoff</span> S Block, Garden Estate, DLF Phase 3 selected
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Service Unavailable Error</div>
+                    <div class="timeline-details">
+                        <span class="badge badge-error">Error</span> Rapido doesn't service the selected pickup location
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">New Route Requested</div>
+                    <div class="timeline-details">
+                        User changed locations to:
+                        <ul>
+                            <li><span class="bold">Pickup:</span> Bob's Bar, Koramangala, Bengaluru</li>
+                            <li><span class="bold">Dropoff:</span> Mumbai Tiffin, HSR Layout, Bengaluru</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Fare Estimate Retrieved</div>
+                    <div class="timeline-details">
+                        <div><span class="bold">Distance:</span> 4.7 km</div>
+                        <div><span class="bold">Duration:</span> 18 minutes</div>
+                        <div class="bold">Available Options:</div>
+                        <div>
+                            <span class="badge badge-price">Bike ₹71</span>
+                            <span class="badge badge-price">Bike Lite ₹89</span>
+                            <span class="badge badge-price">Scooty ₹41</span>
+                            <span class="badge badge-price">Auto ₹91</span>
+                            <span class="badge badge-price">Cab Premium ₹120</span>
+                        </div>
+                        <a href="https://www.google.com/maps/dir/?api=1&origin=12.9344793,77.6130544&destination=12.9062388,77.637249&travelmode=driving" class="map-link">View Route on Google Maps</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Bike Ride Booked</div>
+                    <div class="timeline-details">
+                        <span class="badge badge-success">Success</span> Bike ride successfully booked!
+                        <div>
+                            <div><span class="bold">Pickup:</span> Bob's Bar, 7th Block, Koramangala</div>
+                            <div><span class="bold">Dropoff:</span> Mumbai Tiffin, HSR Layout</div>
+                            <div><span class="bold">Tracking URL:</span> <a href="#" class="map-link">Track your ride</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conversation">
+            <h2 class="section-title">Conversation Highlights</h2>
+            
+            <div class="message">
+                <div class="user-message">Book me a bike taxi from mg road to s block</div>
+            </div>
+            
+            <div class="message">
+                <div class="assistant-message">
+                    Here's a breakdown of the results for "MG Road":
+                    <ul>
+                        <li>The most relevant option is <span class="bold">MG Road, Yellappa Chetty Layout, Ashok Nagar, Bengaluru, Karnataka, India</span>.</li>
+                        <li>Other options include MG Road Metro Station in Gurugram.</li>
+                    </ul>
+                    Which location would you like to use?
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="user-message">The last gurgaon one</div>
+            </div>
+            
+            <div class="message">
+                <div class="assistant-message">
+                    Here's a summary of the results for "S Block" in Gurgaon:
+                    <ul>
+                        <li>The most relevant option is <span class="bold">S Block, DLF Phase 3, Sector 24, Gurgaon, Haryana, India</span>.</li>
+                        <li>Other options include S Block, Garden Estate and Block S, Uppal Southend.</li>
+                    </ul>
+                    Which specific S Block would you like to go to?
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="user-message"><span class="italic">S Block, Garden Estate</span></div>
+            </div>
+            
+            <div class="message">
+                <div class="assistant-message">
+                    <span class="badge badge-error">Error</span> "Oops! We currently don't service your pickup location. Please select a different location."
+                    <br><br>
+                    Would you like help finding a different pick-up location?
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="user-message">Change my pickup location from Bobs bar in Karmangala and drop location to Mumbai tiffin in HSR layout</div>
+            </div>
+            
+            <div class="message">
+                <div class="assistant-message">
+                    Here are the options for your new locations:
+                    <ul>
+                        <li><span class="bold">Pick-up:</span> Bob's Bar, 7th Block, Koramangala, Bengaluru</li>
+                        <li><span class="bold">Drop-off:</span> Mumbai Tiffin, Main Road, Sector 7, HSR Layout, Bengaluru</li>
+                    </ul>
+                    Would you like to proceed with booking?
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="user-message">Yes</div>
+            </div>
+            
+            <div class="message">
+                <div class="assistant-message">
+                    Here are the updated fare estimates:
+                    <ul>
+                        <li><span class="bold">Estimated Time:</span> 18 minutes</li>
+                        <li><span class="bold">Distance:</span> 4.7 km</li>
+                        <li><span class="bold">Bike Ride:</span> ₹71</li>
+                        <li><span class="bold">Scooty:</span> ₹41</li>
+                        <li><span class="bold">Auto:</span> ₹91</li>
+                    </ul>
+                    Which ride option would you like to book?
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="user-message">Book bike</div>
+            </div>
+            
+            <div class="message">
+                <div class="assistant-message">
+                    <span class="badge badge-success">Success!</span> Your bike ride has been successfully booked!
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
